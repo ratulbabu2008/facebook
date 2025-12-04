@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Facebook Home (HTML + CSS)</title>
+  <style>
+    :root{
+      --bg: #f0f2f5;
+      --card: #ffffff;
+      --text: #1c1e21;
+      --muted: #606770;
+      --border: #e4e6eb;
+      --primary: #1877f2;
+      --hover: #e7f3ff;
+      --success: #42b72a;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    /* Top Nav */
+    .topbar{
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+    }
+    .topbar-inner{
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 8px 16px;
+      display: grid;
+      grid-template-columns: 220px 1fr 280px;
+      gap: 12px;
+      align-items: center;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .logo{
+      width:36px; height:36px;
+      border-radius:50%;
+      background: var(--primary);
+      display:flex; align-items:center; justify-content:center;
+      color:#fff; font-weight:700; font-size:22px;
+    }
+    .search{
+      display:flex; align-items:center; gap:8px;
+      background:#f0f2f5; padding:8px 12px; border-radius:20px;
+      border:1px solid var(--border);
+    }
+    .search input{
+      border:none; outline:none; background:transparent; width:100%;
+      font-size:14px;
+    }
+    .nav-actions{
+      display:flex; justify-content:flex-end; align-items:center; gap:8px;
+    }
+    .icon-btn{
+      width:40px; height:40px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      border:1px solid var(--border);
+      background: var(--card);
+      cursor:pointer;
+    }
+    .icon-btn:hover{background:#f7f7f7}
+
+    /* Layout */
+    .layout{
+      max-width: 1200px;
+      margin: 16px auto;
+      padding: 0 16px;
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr) 320px;
+      gap: 16px;
+    }
+
+    /* Sidebar Left */
+    .sidebar{
+      display:flex; flex-direction:column; gap:8px;
+      position: sticky; top:64px; height: calc(100vh - 80px);
+      overflow: auto; padding-bottom: 16px;
+    }
+    .side-item{
+      display:flex; align-items:center; gap:10px;
+      padding:10px; border-radius:8px; cursor:pointer;
+    }
+    .side-item:hover{background:#e9ecef}
+    .avatar{
+      width:32px; height:32px; border-radius:50%;
+      background:#d8dadf; display:flex; align-items:center; justify-content:center;
+      color:#555; font-weight:600;
+    }
+    .side-title{font-size:14px}
+
+    .section-title{
+      margin:14px 10px 6px; font-size:13px; color:var(--muted); font-weight:600;
+    }
+    .divider{height:1px; background:var(--border); margin:6px 0}
+
+    /* Feed */
+    .feed{
+      display:flex; flex-direction:column; gap:12px;
+    }
+    .card{
+      background:var(--card); border:1px solid var(--border);
+      border-radius:10px; overflow:hidden;
+    }
+    .composer{
+      padding:12px;
+    }
+    .composer-top{
+      display:flex; align-items:center; gap:10px; margin-bottom:10px;
+    }
+    .composer input{
+      width:100%; border:1px solid var(--border); border-radius:20px;
+      padding:10px 14px; outline:none; background:#f0f2f5;
+    }
+    .composer-actions{
+      display:flex; justify-content:space-between; gap:8px; flex-wrap:wrap;
+      border-top:1px solid var(--border); padding-top:10px;
+    }
+    .action{
+      flex:1; min-width:160px; display:flex; align-items:center; gap:8px;
+      padding:8px; border-radius:8px; cursor:pointer; justify-content:center;
+    }
+    .action:hover{background:#f7f7f7}
+    .action.live{color:#f02849}
+    .action.photo{color:#45bd62}
+    .action.feeling{color:#f7b928}
+
+    /* Story/Reel row (placeholder) */
+    .stories{
+      padding:12px;
+    }
+    .story-list{
+      display:grid; grid-template-columns: repeat(6, 1fr); gap:8px;
+    }
+    .story{
+      height:160px; border-radius:12px; border:1px solid var(--border);
+      background: linear-gradient(135deg, #e7f3ff 0%, #fff 100%);
+      display:flex; align-items:flex-end; padding:8px;
+      font-size:12px; color:#333;
+    }
+
+    /* Post */
+    .post{
+      padding:12px;
+    }
+    .post-header{
+      display:flex; align-items:center; gap:10px;
+    }
+    .post-meta{
+      display:flex; flex-direction:column;
+      font-size:13px;
+    }
+    .post-author{font-weight:600}
+    .post-time{color:var(--muted)}
+    .post-text{
+      margin:10px 0; font-size:15px; line-height:1.5;
+    }
+    .post-media{
+      background:#dfe3ee; border-radius:8px; height:320px;
+      display:flex; align-items:center; justify-content:center;
+      color:#556; font-size:14px; border:1px solid var(--border);
+    }
+    .post-actions{
+      margin-top:8px; border-top:1px solid var(--border); padding-top:8px;
+      display:flex; gap:8px; justify-content:space-between;
+    }
+    .btn{
+      flex:1; display:flex; align-items:center; justify-content:center; gap:8px;
+      padding:10px; border-radius:8px; cursor:pointer;
+    }
+    .btn:hover{background:#f7f7f7}
+
+    /* Right column */
+    .rightbar{
+      display:flex; flex-direction:column; gap:12px;
+      position: sticky; top:64px; height: calc(100vh - 80px);
+      overflow:auto; padding-bottom: 16px;
+    }
+    .panel{
+      background:var(--card); border:1px solid var(--border);
+      border-radius:10px; overflow:hidden;
+    }
+    .panel-header{
+      padding:10px 12px; border-bottom:1px solid var(--border);
+      font-weight:600; font-size:14px;
+    }
+    .panel-body{padding:12px}
+    .contact{
+      display:flex; align-items:center; gap:10px; padding:6px; border-radius:8px;
+      cursor:pointer;
+    }
+    .contact:hover{background:#f7f7f7}
+    .presence{
+      width:8px; height:8px; border-radius:50%;
+      background: #31a24c; margin-left:auto;
+    }
+
+    /* Footer spacing on mobile */
+    .spacer{height:40px}
+
+    /* Responsive */
+    @media (max-width: 1100px){
+      .layout{grid-template-columns: 60px 1fr 300px}
+      .side-title{display:none}
+      .section-title{display:none}
+    }
+    @media (max-width: 900px){
+      .layout{grid-template-columns: 60px 1fr}
+      .rightbar{display:none}
+      .topbar-inner{grid-template-columns: 180px 1fr 180px}
+    }
+    @media (max-width: 640px){
+      .topbar-inner{grid-template-columns: 140px 1fr 120px}
+      .story-list{grid-template-columns: repeat(4, 1fr)}
+      .nav-actions{gap:6px}
+      .icon-btn{width:36px; height:36px}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="logo">f</div>
+        <div style="font-weight:700;">Facebook</div>
+      </div>
+      <div class="search">
+        <span style="color:#888">🔍</span>
+        <input type="text" placeholder="Search Facebook" />
+      </div>
+      <div class="nav-actions">
+        <button class="icon-btn" title="Home">🏠</button>
+        <button class="icon-btn" title="Watch">▶️</button>
+        <button class="icon-btn" title="Marketplace">🛒</button>
+        <button class="icon-btn" title="Groups">👥</button>
+        <button class="icon-btn" title="Menu">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Layout -->
+  <main class="layout">
+    <!-- Left Sidebar -->
+    <aside class="sidebar">
+      <div class="side-item">
+        <div class="avatar">আপ</div>
+        <div class="side-title">not name</div>
+      </div>
+      <div class="side-item">
+        <div class="avatar">🏠</div>
+        <div class="side-title">হোম</div>
+      </div>
+      <div class="side-item">
+        <div class="avatar">👥</div>
+        <div class="side-title">বন্ধুরা</div>
+      </div>
+      <div class="side-item">
+        <div class="avatar">🛒</div>
+        <div class="side-title">মার্কেটপ্লেস</div>
+      </div>
+      <div class="side-item">
+        <div class="avatar">▶️</div>
+        <div class="side-title">ওয়াচ</div>
+      </div>
+      <div class="side-item">
+        <div class="avatar">🧑‍🤝‍🧑</div>
+        <div class="side-title">গ্রুপ</div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="section-title">শর্টকাট</div>
+      <div class="side-item">
+        <div class="avatar">#</div>
+        <div class="side-title">আপনার পেজ</div>
+      </div>
+      <div class="side-item">
+        <div class="avatar">🎮</div>
+        <div class="side-title">গেমিং</div>
+      </div>
+      <div class="side-item">
+        <div class="avatar">⭐</div>
+        <div class="side-title">পছন্দের</div>
+      </div>
+    </aside>
+
+    <!-- Feed -->
+    <section class="feed">
+      <!-- Stories/Reels placeholder -->
+      <div class="card stories">
+        <div class="story-list">
+          <div class="story">স্টোরি 1</div>
+          <div class="story">স্টোরি 2</div>
+          <div class="story">স্টোরি 3</div>
+          <div class="story">স্টোরি 4</div>
+          <div class="story">স্টোরি 5</div>
+          <div class="story">স্টোরি 6</div>
+        </div>
+      </div>
+
+      <!-- Composer -->
+      <div class="card composer">
+        <div class="composer-top">
+          <div class="avatar">আপ</div>
+          <input type="text" placeholder="আপনি কী ভাবছেন?" />
+        </div>
+        <div class="composer-actions">
+          <div class="action live">🎥 লাইভ ভিডিও</div>
+          <div class="action photo">🖼️ ছবি/ভিডিও</div>
+          <div class="action feeling">😊 অনুভূতি/কর্মকাণ্ড</div>
+        </div>
+      </div>
+
+      <!-- Post 1 -->
+      <article class="card post">
+        <div class="post-header">
+          <div class="avatar">আর</div>
+          <div class="post-meta">
+            <span class="post-author">আরিফুল ইসলাম</span>
+            <span class="post-time">২ ঘন্টা আগে · 🌍 পাবলিক</span>
+          </div>
+        </div>
+        <div class="post-text">
+          আজ বগুড়ার আকাশটা দারুণ! একটু হালকা বাতাস, কাজের ফাঁকে চা খেতে ইচ্ছে করছে।
+        </div>
+        <div class="post-media">ইমেজ প্লেসহোল্ডার</div>
+        <div class="post-actions">
+          <div class="btn">👍 লাইক</div>
+          <div class="btn">💬 মন্তব্য</div>
+          <div class="btn">↪️ শেয়ার</div>
+        </div>
+      </article>
+
+      <!-- Post 2 -->
+      <article class="card post">
+        <div class="post-header">
+          <div class="avatar">ন</div>
+          <div class="post-meta">
+            <span class="post-author">নুসরাত তাবাসসুম</span>
+            <span class="post-time">৫ ঘন্টা আগে · 👥 বন্ধু</span>
+          </div>
+        </div>
+        <div class="post-text">
+          নতুন রেসিপি ট্রাই করলাম—বাসায় সবাই অনেক পছন্দ করেছে। রেসিপি চাইলে কমেন্টে বলো।
+        </div>
+        <div class="post-media">ভিডিও প্লেসহোল্ডার</div>
+        <div class="post-actions">
+          <div class="btn">👍 লাইক</div>
+          <div class="btn">💬 মন্তব্য</div>
+          <div class="btn">↪️ শেয়ার</div>
+        </div>
+      </article>
+
+      <div class="spacer"></div>
+    </section>
+
+    <!-- Right Sidebar -->
+    <aside class="rightbar">
+      <div class="panel">
+        <div class="panel-header">Sponsored</div>
+        <div class="panel-body">
+          <div style="display:flex; gap:10px; align-items:center; margin-bottom:10px;">
+            <div style="width:60px; height:60px; border-radius:8px; background:#e7f3ff; border:1px solid var(--border);"></div>
+            <div>
+              <div style="font-weight:600;">Ad title</div>
+              <div style="color:var(--muted); font-size:13px;">বগুড়ায় নতুন অফার</div>
+            </div>
+          </div>
+          <div style="display:flex; gap:10px; align-items:center;">
+            <div style="width:60px; height:60px; border-radius:8px; background:#e7f3ff; border:1px solid var(--border);"></div>
+            <div>
+              <div style="font-weight:600;">Another ad</div>
+              <div style="color:var(--muted); font-size:13px;">সীমিত সময়ের ডিল</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">Contacts</div>
+        <div class="panel-body">
+          <div class="contact">
+            <div class="avatar">স</div>
+            <div>সাজিদ হোসেন</div>
+            <span class="presence"></span>
+          </div>
+          <div class="contact">
+            <div class="avatar">র</div>
+            <div>রিমি আক্তার</div>
+            <span class="presence"></span>
+          </div>
+          <div class="contact">
+            <div class="avatar">ম</div>
+            <div>মাহিন খান</div>
+            <span class="presence"></span>
+          </div>
+          <div class="contact">
+            <div class="avatar">ত</div>
+            <div>তাহসিন আনাম</div>
+            <span class="presence"></span>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+</body>
+</html>
